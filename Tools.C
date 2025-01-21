@@ -44,8 +44,8 @@
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
   uint64_t newLong = 0;
-  for (int i = 0; i < LONGSIZE; ++i){
-    newLong |= (uint64_t(bytes[i]) << (i * 8));
+  for (int i = LONGSIZE - 1; i >= 0; --i) {
+    newLong = (newLong << LONGSIZE) | bytes[i];
   }
   return newLong;
 }
@@ -71,6 +71,11 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 {
+  if (0 > byteNum > 7)
+  {
+    printf("input is out range");
+    return 0;
+  }
   return 0;
 }
 
