@@ -71,10 +71,10 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 {
-  if (0 > byteNum > 7)
+  if (byteNum >= 0 && byteNum <= 7)
   {
-    printf("input is out range");
-    return 0;
+    uint8_t oneByte = (source >> byteNum * 8) & 0xFF;
+    return oneByte;
   }
   return 0;
 }
