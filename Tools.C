@@ -44,7 +44,8 @@
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
   uint64_t newLong = 0;
-  for (int i = LONGSIZE - 1; i >= 0; --i) {
+  for (int i = LONGSIZE - 1; i >= 0; --i) 
+  {
     newLong = (newLong << LONGSIZE) | bytes[i];
   }
   return newLong;
@@ -71,11 +72,12 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
 {
-  if (0 <= byteNum && byteNum <= 7) {
+  if (0 > byteNum || byteNum > 7) 
+  {
     return 0;
   }
   uint8_t oneByte = (source >> byteNum * 8) & 0xFF;
-    return oneByte;
+  return oneByte;
 }
 
 /**
@@ -105,7 +107,8 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 {
-  if (low < 0 || high > 63 || low > high) {
+  if (low < 0 || high > 63 || low > high) 
+  {
     return 0;
   }
   uint64_t numBits = source << (63 - high);
@@ -138,7 +141,14 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  if (low < 0 || high > 63 || low > high) 
+  {
+    return source;
+  }
+  uint64_t mask = -1;
+  mask = getBits(mask, low, high);
+  mask = mask << low;
+  return source | mask;
 }
 
 /**
@@ -163,7 +173,15 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  if (low < 0 || high > 63 || low > high) 
+  {
+    return source;
+  }
+  uint64_t mask = -1;
+  mask = getBits(mask, low, high);
+  mask = mask << low;
+  mask = ~mask;
+  return source & mask;
 }
 
 
@@ -194,7 +212,15 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0; 
+  if (srclow < 0 || srclow + length > 64 || dstlow < 0 || dstlow + length > 64) 
+  {
+    return dest;
+  }
+  uint64_t bitCopy = getBits(source, srclow, (srclow + length) - 1);
+  dest = clearBits(dest, dstlow, (dstlow + length) - 1);
+  bitCopy = bitCopy << dstlow;
+  dest = bitCopy | dest; 
+  return dest;
 }
 
 
