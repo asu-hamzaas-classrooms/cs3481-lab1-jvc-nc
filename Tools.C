@@ -270,7 +270,7 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::sign(uint64_t source)
 {
-  return 0;
+  return (source >> 63) & 1;
 }
 
 /**
@@ -294,13 +294,11 @@ uint64_t Tools::sign(uint64_t source)
  */
 bool Tools::addOverflow(uint64_t op1, uint64_t op2)
 {
-  //Hint: If an overflow occurs then it overflows by just one bit.
-  //      In other words, 65 bits would be needed to store the arithmetic 
-  //      result instead of 64 and the sign bit in the stored result (bit 63) is incorrect. 
-  //      Thus, the way to check for an overflow is to compare the signs of the
-  //      operand and the result.  For example, if you add two positive numbers, 
-  //      the result should be positive, otherwise an overflow occurred.
-  return false;
+  uint64_t sum = op1 + op2;
+  uint64_t op1Sign = sign(op1);
+  uint64_t op2Sign = sign(op2);
+  uint64_t opSignSum = sign(sum);
+  return op1Sign == op2Sign && op1Sign != opSignSum;
 }
 
 /**
